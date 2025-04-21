@@ -16,7 +16,7 @@ export function SearchToy() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    fetch("http://localhost:5000/products")
+    fetch("https://web-toy-shop-server.onrender.com/products")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Lỗi khi lấy dữ liệu sản phẩm");

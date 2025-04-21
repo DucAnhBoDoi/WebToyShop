@@ -33,7 +33,7 @@ export function AddToy() {
   // Tạo ID tự động khi chọn danh mục
   useEffect(() => {
     const fetchLastToyId = async () => {
-      const response = await fetch(`http://localhost:5000/products`);
+      const response = await fetch(`https://web-toy-shop-server.onrender.com/products`);
       const products = await response.json();
       const categoryProducts = products.filter(
         (product) => product.category === newProduct.category
@@ -75,7 +75,7 @@ export function AddToy() {
     };
 
     try {
-      const response = await fetch("http://localhost:5000/product/add", {
+      const response = await fetch("https://web-toy-shop-server.onrender.com/product/add", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",

@@ -18,7 +18,7 @@ export function UpdateToy() {
 
   useEffect(() => {
     const fetchToy = async () => {
-      const response = await fetch(`http://localhost:5000/products`);
+      const response = await fetch(`https://web-toy-shop-server.onrender.com/products`);
       const products = await response.json();
       const currentToy = products.find((t) => t.id === id);
       
@@ -63,7 +63,7 @@ export function UpdateToy() {
     };
   
     try {
-      const response = await fetch(`http://localhost:5000/product/update/${id}`, {
+      const response = await fetch(`https://web-toy-shop-server.onrender.com/product/update/${id}`, {
         method: "PUT",
         headers: {
           "Content-Type": "application/json",

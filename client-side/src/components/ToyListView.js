@@ -19,7 +19,7 @@ export function ToyListView() {
 
   // Fetch dữ liệu từ server
   useEffect(() => {
-    fetch("http://localhost:5000/products")
+    fetch("https://web-toy-shop-server.onrender.com/products")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Lỗi khi lấy dữ liệu từ server");

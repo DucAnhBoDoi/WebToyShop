@@ -11,7 +11,7 @@ export function ToyDetail() {
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    fetch("http://localhost:5000/products")
+    fetch("https://web-toy-shop-server.onrender.com/products")
       .then((res) => {
         if (!res.ok) {
           throw new Error("Lỗi khi lấy sản phẩm");

@@ -7,7 +7,7 @@ export function DeleteToy({ toyId }) {
 
   const handleDelete = () => {
     if (window.confirm(`Bạn có muốn xoá sản phẩm ${toyId} hay không?`)) {
-      fetch(`http://localhost:5000/product/delete/${toyId}`, {
+      fetch(`https://web-toy-shop-server.onrender.com/product/delete/${toyId}`, {
         method: "DELETE",
       })
         .then((res) => res.json())
