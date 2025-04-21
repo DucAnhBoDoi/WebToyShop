@@ -118,6 +118,6 @@ app.delete("/product/delete/:id", async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`✅ Server đang chạy tại cổng: ${port}`);
+    console.log(`Server đang chạy tại cổng: ${port}`);
 });
 
