@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 require("dotenv").config();
 
 const app = express();
-const port = 5000;
+const port = process.env.PORT || 5000;
 
 app.use(cors());
 app.use(express.json());
@@ -118,5 +118,6 @@ app.delete("/product/delete/:id", async (req, res) => {
 });
 
 app.listen(port, () => {
-    console.log(`Server đang chạy tại http://localhost:${port}`);
+    console.log(`✅ Server đang chạy tại cổng: ${port}`);
 });
+
