@@ -1,5 +1,5 @@
-import React from "react";
-import { BrowserRouter as Router, Routes, Route, Link, useLocation } from "react-router-dom";
+import React, { useState, useEffect } from "react";
+import { BrowserRouter as Router, Routes, Route, Navigate, useLocation, Link } from "react-router-dom";
 import { ToyListView } from "./components/ToyListView";
 import { ToyDetail } from "./components/ToyDetail";
 import { SearchToy } from "./components/SearchToy";
@@ -7,10 +7,18 @@ import { AddToy } from "./components/AddToy";
 import { UpdateToy } from "./components/UpdateToy";
 import { DeleteToy } from "./components/DeleteToy";
 import { Filter } from "./components/Filter";
+import { Login } from "./components/Login";
+import { Register } from "./components/Register";
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Container, Navbar, Nav, Card, Row, Col, Button } from 'react-bootstrap';
 
-function Header() {
+function Header({ token, setToken }) {
+  const handleLogout = () => {
+    localStorage.removeItem("token");
+    setToken("");
+    window.location.href = "/login";
+  };
+
   return (
     <Navbar bg="dark" variant="dark" expand="lg" className="mb-4">
       <Container>
@@ -18,25 +26,34 @@ function Header() {
         <Navbar.Toggle aria-controls="basic-navbar-nav" />
         <Navbar.Collapse id="basic-navbar-nav">
           <Nav className="me-auto">
-            <Nav.Link as={Link} to="/list">Sản phẩm</Nav.Link>
-            <Nav.Link as={Link} to="/search">Tìm kiếm</Nav.Link>
-            <Nav.Link as={Link} to="/add">Thêm sản phẩm</Nav.Link>
+            {token && (
+              <>
+                <Nav.Link as={Link} to="/list">Sản phẩm</Nav.Link>
+                <Nav.Link as={Link} to="/search">Tìm kiếm</Nav.Link>
+                <Nav.Link as={Link} to="/add">Thêm sản phẩm</Nav.Link>
+              </>
+            )}
           </Nav>
+          {token && (
+            <Button variant="outline-light" onClick={handleLogout}>Đăng xuất</Button>
+          )}
         </Navbar.Collapse>
       </Container>
     </Navbar>
   );
 }
 
-function HomePage() {
+function PrivateRoute({ token, children }) {
+  return token ? children : <Navigate to="/login" />;
+}
+
+function HomePage({ token }) {
   const location = useLocation();
-  if (location.pathname !== "/") return null;
+  if (location.pathname !== "/" || !token) return null;
 
   return (
     <Container>
       <h2 className="text-center mb-4">Chào mừng đến với Toy Shop</h2>
-      <p className="text-center mb-5">Khám phá hàng trăm món đồ chơi thú vị, thông minh và đầy màu sắc !</p>
-
       <Row className="g-4">
         <Col md={4}>
           <Card className="h-100 shadow">
@@ -71,20 +88,29 @@ function HomePage() {
 }
 
 export function App() {
+  const [token, setToken] = useState(localStorage.getItem("token") || "");
+
+  useEffect(() => {
+    const storedToken = localStorage.getItem("token");
+    if (storedToken) setToken(storedToken);
+  }, []);
+
   return (
     <Router>
-      <Header />
-      <HomePage />
+      <Header token={token} setToken={setToken} />
+      <HomePage token={token} />
       <Container className="mt-4">
         <Routes>
-          <Route path="/" element={null} />
-          <Route path="/list" element={<ToyListView />} />
-          <Route path="/toy/:id" element={<ToyDetail />} />
-          <Route path="/search" element={<SearchToy />} />
-          <Route path="/add" element={<AddToy />} />
-          <Route path="/update/:id" element={<UpdateToy />} />
-          <Route path="/delete" element={<DeleteToy />} />
-          <Route path="/filter" element={<Filter />} />
+          <Route path="/login" element={<Login setToken={setToken} />} />
+          <Route path="/register" element={<Register setToken={setToken} />} />
+          <Route path="/" element={<PrivateRoute token={token}><div></div></PrivateRoute>} />
+          <Route path="/list" element={<PrivateRoute token={token}><ToyListView /></PrivateRoute>} />
+          <Route path="/toy/:id" element={<PrivateRoute token={token}><ToyDetail /></PrivateRoute>} />
+          <Route path="/search" element={<PrivateRoute token={token}><SearchToy /></PrivateRoute>} />
+          <Route path="/add" element={<PrivateRoute token={token}><AddToy /></PrivateRoute>} />
+          <Route path="/update/:id" element={<PrivateRoute token={token}><UpdateToy /></PrivateRoute>} />
+          <Route path="/delete" element={<PrivateRoute token={token}><DeleteToy /></PrivateRoute>} />
+          <Route path="/filter" element={<PrivateRoute token={token}><Filter /></PrivateRoute>} />
         </Routes>
       </Container>
     </Router>
